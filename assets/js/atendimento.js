@@ -228,9 +228,11 @@ class Atendimento extends React.Component {
               <TableCell >{row.valor}</TableCell>
               <TableCell >{row.pago? "Sim" : "Não"}</TableCell>
               <TableCell >{row.observacao}</TableCell>
-              <TableCell ><a onClick={()=> this.handleDelete(row.id)}>Excluir</a> | <Dialogo/> </TableCell>
+              <TableCell ><a onClick={()=> this.handleDelete(row.id)}>Excluir</a></TableCell>
 
             </TableRow>
+ 
+
           ))}
         </TableBody>
         </Table> 
@@ -241,7 +243,12 @@ class Atendimento extends React.Component {
   
 
     </>
-  
+  <form className={classes.root} noValidate autoComplete="off">
+  <Input defaultValue="Hello world" inputProps={{ 'aria-label': 'description' }} />
+  <Input placeholder="Placeholder" inputProps={{ 'aria-label': 'description' }} />
+  <Input defaultValue="Disabled" disabled inputProps={{ 'aria-label': 'description' }} />
+  <Input defaultValue="Error" error inputProps={{ 'aria-label': 'description' }} />
+</form>
 
 		);
 
