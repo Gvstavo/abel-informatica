@@ -53,6 +53,15 @@ defmodule Abel.Atendimento do
   end
 
 
+  def get_by_id(id) do
+    int_id = id 
+              |> String.to_integer
+
+    Atendimento
+    |> Repo.get(int_id)
+
+  end
+
   def edit(cliente) do
     
 

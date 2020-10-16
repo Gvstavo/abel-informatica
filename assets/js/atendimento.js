@@ -41,6 +41,7 @@ class Atendimento extends React.Component {
 			valor: 0.0,
       obs: " ",
       arr: [],
+      update: false
 		};
 
 		this.handleChangeClient = this.handleChangeClient.bind(this);
@@ -137,13 +138,25 @@ class Atendimento extends React.Component {
 	    window.location.reload(false) 	
 	  })  
 
+
   
-  event.preventDefault();
+    event.preventDefault();
   }
 
 
+  handleUpdate(){
+    
+  }
+
+  handleLoadFormUpdate(id){
+
+    let r = '/api/get/' + id;
+    axios.get(r).then(function (response) {
+      console.log(JSON.parse(response.data));
+    })
 
 
+  }
 	render()	{
 
 
@@ -151,7 +164,7 @@ class Atendimento extends React.Component {
 		return(
       <>
 
-		  <form onSubmit={this.handleSubmit}>
+		  <form onSubmit={() => {!this.state.update? this.handleSubmit() : this.handleUpdate()}}>
         <label>
           Cliente:
 
@@ -228,10 +241,11 @@ class Atendimento extends React.Component {
               <TableCell >{row.valor}</TableCell>
               <TableCell >{row.pago? "Sim" : "Não"}</TableCell>
               <TableCell >{row.observacao}</TableCell>
-              <TableCell ><a onClick={()=> this.handleDelete(row.id)}>Excluir</a></TableCell>
+              <TableCell ><a onClick={()=> this.handleDelete(row.id)}>Excluir</a>|<a onClick={()=> {this.handleLoadFormUpdate(row.id)}}>Editar</a> </TableCell>
 
-            </TableRow>
- 
+            </TableRow> 
+       
+                           
 
           ))}
         </TableBody>
@@ -242,13 +256,9 @@ class Atendimento extends React.Component {
 
   
 
-    </>
-  <form className={classes.root} noValidate autoComplete="off">
-  <Input defaultValue="Hello world" inputProps={{ 'aria-label': 'description' }} />
-  <Input placeholder="Placeholder" inputProps={{ 'aria-label': 'description' }} />
-  <Input defaultValue="Disabled" disabled inputProps={{ 'aria-label': 'description' }} />
-  <Input defaultValue="Error" error inputProps={{ 'aria-label': 'description' }} />
-</form>
+
+      </>
+
 
 		);
 

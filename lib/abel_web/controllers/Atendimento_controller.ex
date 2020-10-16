@@ -44,5 +44,16 @@ defmodule AbelWeb.AtendimentoController do
 
 	end
 
+	def get(conn , %{"id" => id}) do
+		
+		ret = id
+					|> Atendimento.get_by_id
+					|> Poison.encode!
+
+
+		json(conn , ret)			
+
+	end
+
   
 end
