@@ -22,6 +22,7 @@ defmodule AbelWeb.Router do
     get "/all", AtendimentoController, :all
     get "/delete/:id" , AtendimentoController, :delete
     get "/get/:id" , AtendimentoController, :get
+    post "/update", AtendimentoController, :update
 
 
   end  

@@ -55,5 +55,20 @@ defmodule AbelWeb.AtendimentoController do
 
 	end
 
+	def update(conn , params) do
+		
+		ret = params 
+					|> Atendimento.update
+
+
+  	case ret do
+  		
+  		{:ok , _} -> json(conn, %{"result" => "ok"})
+  		_ -> json(conn, %{"result" => "error"})
+
+  	end	
+
+	end
+
   
 end

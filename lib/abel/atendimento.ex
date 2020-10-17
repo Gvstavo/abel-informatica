@@ -43,6 +43,8 @@ defmodule Abel.Atendimento do
                   |> elem(1) 
 
                 end) 
+                |> Map.update!("pago", &Kernel.==(&1,"pago"))
+                |> Map.update!("valor" , &Kernel.to_string(&1) |> Float.parse |> elem(0))
 
     %Atendimento{}
     |> Atendimento.changeset(changeset)          
@@ -62,7 +64,43 @@ defmodule Abel.Atendimento do
 
   end
 
-  def edit(cliente) do
+  def update(cliente) do
+
+    id = cliente
+          |> Map.get("id")
+
+    changeset = cliente
+                |> Map.update!("entrada" , fn x -> 
+
+                  x
+                  |> Date.from_iso8601!
+                  |> NaiveDateTime.new(~T[00:00:00])
+                  |> elem(1) 
+
+                end)    
+                |> Map.update!("saida" , fn x -> 
+
+                  x
+                  |> Date.from_iso8601!
+                  |> NaiveDateTime.new(~T[00:00:00])
+                  |> elem(1) 
+
+                end)
+                |> Map.update!("pago", &Kernel.==(&1,"pago"))
+                |> Map.update!("valor" , &Kernel.to_string(&1) |> Float.parse |> elem(0))
+                |> Map.drop(["id"])
+                |> Enum.map(fn {k,v} -> {String.to_atom(k),v} end) 
+                |> Map.new
+
+    Atendimento
+    |> Repo.get(id)
+    |> Ecto.Changeset.change(changeset)
+    |> Repo.update
+  
+
+
+
+
     
 
   end

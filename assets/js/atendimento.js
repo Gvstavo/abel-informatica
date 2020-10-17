@@ -35,13 +35,14 @@ class Atendimento extends React.Component {
 			cliente:  '' ,
 			contato: " " ,
 			entrada: new Date(),
-			pago: false,
+			pago: "pendente",
 			saida: new Date(),
 			servico: " ",
 			valor: 0.0,
       obs: " ",
       arr: [],
-      update: false
+      update: false,
+      id: 0
 		};
 
 		this.handleChangeClient = this.handleChangeClient.bind(this);
@@ -55,6 +56,7 @@ class Atendimento extends React.Component {
     this.handleChangeObs = this.handleChangeObs.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
 
 
 	}
@@ -87,10 +89,10 @@ class Atendimento extends React.Component {
   	this.setState({entrada: event.target.value});
   }
   handleChangePago(event) { 
-  	if (event.target.value == "pago")   
-  		this.setState({pago: true});
-  	else
-  		this.setState({pago: false});
+  //	if (event.target.value == "pago")   
+  		this.setState({pago: event.target.value});
+  	//else
+  		//this.setState({pago: false});
 
   }
   handleChangeSaida(event) {    
@@ -144,16 +146,55 @@ class Atendimento extends React.Component {
   }
 
 
-  handleUpdate(){
+  handleUpdate(event){
+
+
+
+
+    let ret = axios.post('/api/update', {
+      id: this.state.id,
+      cliente: this.state.cliente,
+      contato: this.state.contato,
+      entrada: this.state.entrada,
+      saida: this.state.saida,
+      pago: this.state.pago,
+      servico: this.state.servico,
+      valor: this.state.valor,
+      observacao: this.state.obs
+
+    })
+    .then(function (response) {
+      window.location.reload(false) 
+    });  
+
+
+  
+    event.preventDefault();
     
   }
 
   handleLoadFormUpdate(id){
 
+    let ret;
+
+
     let r = '/api/get/' + id;
     axios.get(r).then(function (response) {
-      console.log(JSON.parse(response.data));
-    })
+       
+
+
+      ret = JSON.parse(response.data);
+      this.setState({update: true});
+      this.setState({cliente: ret.cliente});
+      this.setState({contato: ret.contato});
+      this.setState({entrada: ret.entrada.slice(0,10)});
+      this.setState({servico: ret.servico});
+      this.setState({saida: ret.saida.slice(0,10)});
+      this.setState({obs: ret.observacao});
+      this.setState({pago: ret.pago? "pago" : "pendente"});
+      this.setState({valor: ret.valor});
+      this.setState({id: ret.id});
+    }.bind(this))
 
 
   }
@@ -164,7 +205,7 @@ class Atendimento extends React.Component {
 		return(
       <>
 
-		  <form onSubmit={() => {!this.state.update? this.handleSubmit() : this.handleUpdate()}}>
+		  <form onSubmit={this.state.update? this.handleUpdate : this.handleSubmit}>
         <label>
           Cliente:
 
@@ -196,10 +237,10 @@ class Atendimento extends React.Component {
         </label>
 
         <label>
-          Status:
-         <select onChange={this.handleChangePago}>
-  				<option value="pago">Pendente</option>
-  				<option value="pendente">Pago</option>
+          Pago:
+         <select value={this.state.pago} onChange={this.handleChangePago}>
+  				<option value="pendente">Pendente</option>
+  				<option value="pago">Pago</option>
   			</select>	
          
         </label>
